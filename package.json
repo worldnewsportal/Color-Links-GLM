@@ -1,0 +1,25 @@
+{
+  "name": "color-link",
+  "version": "1.0.0",
+  "description": "Color Link - mobile color-connecting puzzle game (Phase 1)",
+  "main": "www/index.html",
+  "scripts": {
+    "start": "npx --yes http-server www -p 8080 -c-1",
+    "validate": "node scripts/validate-levels.js",
+    "test": "node scripts/smoke-test.js && node scripts/ui-smoke-test.cjs"
+  },
+  "keywords": [
+    "puzzle",
+    "game",
+    "capacitor",
+    "offline"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/android": "^6.1.2"
+  }
+}

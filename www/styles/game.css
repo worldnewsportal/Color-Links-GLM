@@ -1,0 +1,200 @@
+/* Color Link - game.css: gameplay, level grid, settings list, stats. */
+
+/* Gameplay */
+.game-topbar { padding-bottom: 4px; }
+
+.game-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.game-level-chip {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.game-sub { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+.game-sub.diff-easy { color: #5bd07c; }
+.game-sub.diff-medium { color: #ffc24b; }
+.game-sub.diff-hard { color: #ff5a6e; }
+
+.topbar-actions { display: flex; gap: 8px; }
+
+.game-status {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 16px 10px;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.status-chip b { color: var(--text); }
+
+.board-wrap {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  padding: 6px;
+}
+
+.board-wrap canvas {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  display: block;
+}
+
+.game-hint-text {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  padding: 0 20px calc(env(safe-area-inset-bottom, 0px) + 14px);
+}
+
+/* Level selection */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.level-card {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  color: var(--text);
+  font-family: var(--font);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.level-card:active { transform: scale(0.93); }
+
+.level-num { font-size: 1.5rem; font-weight: 800; }
+
+.level-diff { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.diff-easy { color: #5bd07c; }
+.diff-medium { color: #ffc24b; }
+.diff-hard { color: #ff5a6e; }
+
+.level-foot { font-size: 0.72rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+.level-foot .ic.small { width: 14px; height: 14px; color: #5bd07c; }
+
+.level-card.completed {
+  border-color: rgba(91, 208, 124, 0.5);
+  background: linear-gradient(160deg, rgba(91, 208, 124, 0.14), var(--surface));
+}
+
+.level-card.current {
+  border-color: rgba(108, 92, 231, 0.7);
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.35), var(--card-shadow);
+  animation: current-glow 2.2s ease-in-out infinite;
+}
+
+@keyframes current-glow {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.35), var(--card-shadow); }
+  50% { box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.5), var(--card-shadow); }
+}
+
+.level-card.locked {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  box-shadow: none;
+}
+
+/* Settings */
+.settings-list {
+  width: min(100%, 420px);
+  margin: 6px auto 14px;
+  padding: 6px 18px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.setting-row + .setting-row { border-top: 1px solid var(--surface-border); }
+
+.setting-row.column {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.version-note {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  padding: 18px 0 6px;
+  opacity: 0.7;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding-top: 8px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label { font-size: 0.76rem; color: var(--text-dim); text-align: center; }
+
+/* Landscape / short screens */
+@media (max-height: 560px) {
+  .logo-link { margin-bottom: 6px; }
+  .menu-body { gap: 14px; }
+  .logo-title { font-size: 1.9rem; }
+  .menu-progress { padding: 10px 14px; }
+  .btn-big { padding: 12px 20px; font-size: 1.05rem; }
+}
+
+/* Very wide screens (tablets) */
+@media (min-width: 700px) {
+  .menu-body { justify-content: center; }
+  .levels-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); max-width: 720px; margin: 0 auto; }
+  .screen-scroll { padding-inline: calc(50% - 360px); }
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#10162a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Color Link</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/game.css">
+  <link rel="icon" href="assets/images/icon.svg" type="image/svg+xml">
+</head>
+<body>
+  <div id="app">
+
+    <!-- MAIN MENU -->
+    <section id="screen-menu" class="screen active">
+      <div class="bg-decor" aria-hidden="true">
+        <span class="orb orb-1"></span>
+        <span class="orb orb-2"></span>
+        <span class="orb orb-3"></span>
+        <span class="orb orb-4"></span>
+      </div>
+      <header class="menu-top">
+        <button id="menu-sound" class="icon-btn round" data-label="sound" aria-label="Sound"></button>
+        <button id="menu-theme" class="icon-btn round" data-label="theme" aria-label="Theme"></button>
+      </header>
+      <div class="menu-body">
+        <div class="logo" aria-hidden="true">
+          <div class="logo-link">
+            <span class="logo-dot d1"></span><span class="logo-dash"></span><span class="logo-dot d2"></span>
+          </div>
+          <h1 class="logo-title" data-i18n="appName">COLOR LINK</h1>
+          <p class="logo-sub" data-i18n="tagline">Connect the colors</p>
+        </div>
+        <div class="menu-progress card">
+          <div class="progress-row">
+            <span class="progress-label" data-i18n="menu.progress">Progress</span>
+            <span id="menu-progress-pct" class="progress-pct">0%</span>
+          </div>
+          <div class="progress-bar"><div id="menu-progress-fill" class="progress-fill"></div></div>
+          <div class="progress-meta">
+            <span><span data-i18n="menu.currentLevel">Level</span> <b id="menu-current-level">1</b></span>
+            <span><b id="menu-completed">0</b>/<span id="menu-total">30</span> <span data-i18n="menu.completed">completed</span></span>
+          </div>
+        </div>
+        <nav class="menu-actions">
+          <button id="btn-play" class="btn btn-primary btn-big">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            <span data-i18n="menu.play">PLAY</span>
+          </button>
+          <button id="btn-continue" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg>
+            <span data-i18n="menu.continue">Continue</span>
+          </button>
+          <div class="menu-row">
+            <button id="btn-levels" class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" class="ic"><path d="M4 5h16v3H4zm0 5.5h16v3H4zM4 16h16v3H4z" fill="currentColor"/></svg>
+              <span data-i18n="menu.levels">Levels</span>
+            </button>
+            <button id="btn-stats" class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" class="ic"><path d="M5 12h3v8H5zm5.5-6h3v14h-3zM16 9h3v11h-3z" fill="currentColor"/></svg>
+              <span data-i18n="menu.stats">Statistics</span>
+            </button>
+          </div>
+          <button id="btn-settings" class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor" transform="translate(-0.9 0)"/></svg>
+            <span data-i18n="menu.settings">Settings</span>
+          </button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- LEVEL SELECTION -->
+    <section id="screen-levels" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" data-nav="menu" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="topbar-title" data-i18n="levels.title">Select Level</h2>
+        <span class="topbar-chip" id="levels-progress-chip">0/30</span>
+      </header>
+      <div class="screen-scroll">
+        <div id="levels-grid" class="levels-grid"></div>
+      </div>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section id="screen-game" class="screen">
+      <header class="topbar game-topbar">
+        <button class="icon-btn back" id="game-back" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <div class="game-title">
+          <span class="game-level-chip" id="game-level-label">Level 1</span>
+          <span class="game-sub" id="game-difficulty">Easy</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="btn-undo" class="icon-btn" aria-label="Undo">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M12.5 8c-2.6 0-5 .9-6.9 2.6L3 8v7h7l-2.7-2.7A6 6 0 1 1 12.5 20h.1v-2.5h-.1a3.5 3.5 0 1 0-3.4-4.4L12.5 8z" fill="currentColor" transform="translate(0 -1)"/></svg>
+          </button>
+          <button id="btn-hint" class="icon-btn" aria-label="Hint">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2zM9.5 19h5v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1z" fill="currentColor"/></svg>
+            <span id="hint-count" class="badge">3</span>
+          </button>
+          <button id="btn-restart" class="icon-btn" aria-label="Restart">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M17.7 6.3A8 8 0 1 0 19.5 14h-2.1a6 6 0 1 1-1.1-6.3L13 11h7V4l-2.3 2.3z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="game-status">
+        <span class="status-chip"><span data-i18n="game.moves">Moves</span>: <b id="game-moves">0</b></span>
+        <span class="status-chip"><span data-i18n="game.time">Time</span>: <b id="game-time">00:00</b></span>
+        <span class="status-chip"><span data-i18n="game.connected">Connected</span>: <b id="game-connected">0/2</b></span>
+      </div>
+      <div id="board-wrap" class="board-wrap">
+        <canvas id="board-canvas"></canvas>
+      </div>
+      <p class="game-hint-text" data-i18n="game.hintText">Drag between matching dots to connect them</p>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screen-settings" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" data-nav="menu" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="topbar-title" data-i18n="settings.title">Settings</h2>
+        <span class="topbar-chip-spacer"></span>
+      </header>
+      <div class="screen-scroll">
+        <div class="settings-list card">
+          <div class="setting-row">
+            <span data-i18n="settings.sound">Sound effects</span>
+            <label class="switch"><input type="checkbox" id="set-sound"><span class="slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <span data-i18n="settings.music">Background music</span>
+            <label class="switch"><input type="checkbox" id="set-music"><span class="slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <span data-i18n="settings.vibration">Vibration</span>
+            <label class="switch"><input type="checkbox" id="set-vibration"><span class="slider"></span></label>
+          </div>
+        </div>
+        <div class="settings-list card">
+          <div class="setting-row column">
+            <span data-i18n="settings.language">Language</span>
+            <div class="segmented" id="set-language">
+              <button data-value="en">English</button>
+              <button data-value="ar">العربية</button>
+            </div>
+          </div>
+          <div class="setting-row column">
+            <span data-i18n="settings.theme">Theme</span>
+            <div class="segmented" id="set-theme">
+              <button data-value="light" data-i18n="theme.light">Light</button>
+              <button data-value="dark" data-i18n="theme.dark">Dark</button>
+            </div>
+          </div>
+        </div>
+        <button id="btn-reset" class="btn btn-danger">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2z" fill="currentColor"/></svg>
+          <span data-i18n="settings.reset">Reset progress</span>
+        </button>
+        <p class="version-note">Color Link — Phase 1 · v1.0.0</p>
+      </div>
+    </section>
+
+    <!-- STATISTICS -->
+    <section id="screen-stats" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" data-nav="menu" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="topbar-title" data-i18n="stats.title">Statistics</h2>
+        <span class="topbar-chip-spacer"></span>
+      </header>
+      <div class="screen-scroll">
+        <div class="stats-grid">
+          <div class="stat-card card"><span class="stat-value" id="stat-completed">0</span><span class="stat-label" data-i18n="stats.completed">Levels completed</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-current">1</span><span class="stat-label" data-i18n="stats.current">Current level</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-playtime">00:00</span><span class="stat-label" data-i18n="stats.playtime">Total playtime</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-moves">0</span><span class="stat-label" data-i18n="stats.moves">Total moves</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-hints">0</span><span class="stat-label" data-i18n="stats.hints">Hints used</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-sessions">0</span><span class="stat-label" data-i18n="stats.sessions">Sessions</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="dialog-root"></div>
+
+  <script src="src/systems/storage.js"></script>
+  <script src="src/systems/localization.js"></script>
+  <script src="src/systems/audio.js"></script>
+  <script src="src/systems/progression.js"></script>
+  <script src="src/data/levels.js"></script>
+  <script src="src/core/solver.js"></script>
+  <script src="src/core/level-manager.js"></script>
+  <script src="src/core/board.js"></script>
+  <script src="src/core/path-engine.js"></script>
+  <script src="src/core/input-manager.js"></script>
+  <script src="src/core/renderer.js"></script>
+  <script src="src/systems/hints.js"></script>
+  <script src="src/core/game.js"></script>
+  <script src="src/ui/dialogs.js"></script>
+  <script src="src/ui/main-menu.js"></script>
+  <script src="src/ui/level-selection.js"></script>
+  <script src="src/ui/gameplay-screen.js"></script>
+  <script src="src/ui/settings-screen.js"></script>
+  <script src="src/ui/stats-screen.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>
