@@ -9,6 +9,7 @@
       var stats = CL.Progression.getStats();
       document.getElementById('stat-completed').textContent = CL.Progression.completedCount();
       document.getElementById('stat-current').textContent = CL.Progression.currentLevel();
+      document.getElementById('stat-coins').textContent = stats.coins;
       document.getElementById('stat-playtime').textContent = CL.Dialogs.formatTime(Math.floor(stats.playtimeMs / 1000));
       document.getElementById('stat-moves').textContent = stats.totalMoves;
       document.getElementById('stat-hints').textContent = stats.hintsUsed;

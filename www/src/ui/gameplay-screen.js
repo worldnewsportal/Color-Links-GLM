@@ -14,7 +14,6 @@
     var elTime = document.getElementById('game-time');
     var elConnected = document.getElementById('game-connected');
     var elLevel = document.getElementById('game-level-label');
-    var elDiff = document.getElementById('game-difficulty');
     var elHintCount = document.getElementById('hint-count');
 
     function fmt(sec) { return CL.Dialogs.formatTime(sec); }
@@ -48,8 +47,6 @@
       game.load(levelId);
       game.renderer.theme = document.documentElement.getAttribute('data-theme') || 'dark';
       elLevel.textContent = T('game.level') + ' ' + levelId;
-      elDiff.textContent = T('difficulty.' + CL.LevelManager.difficulty(levelId));
-      elDiff.className = 'game-sub diff-' + CL.LevelManager.difficulty(levelId);
       elHintCount.textContent = CL.Hints.remaining(levelId);
       CL.Progression.setLastPlayed(levelId);
       ctx.show('game');

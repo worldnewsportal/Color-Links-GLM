@@ -63,10 +63,12 @@
     var card = built.card;
     var T2 = CL.I18N.t;
 
-    var badge = document.createElement('div');
-    badge.className = 'win-badge';
-    badge.innerHTML =
-      '<svg viewBox="0 0 24 24" class="ic big"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="currentColor"/></svg>';
+    var stars = document.createElement('div');
+    stars.className = 'win-stars';
+    stars.innerHTML =
+      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>' +
+      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>' +
+      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>';
     var h = document.createElement('h3');
     h.className = 'win-title';
     h.textContent = T2('win.title');
@@ -100,7 +102,7 @@
     actionsRow.appendChild(btn(T2('win.replay'), 'btn-secondary', actions.onReplay));
     actionsRow.appendChild(btn(T2('win.menu'), 'btn-ghost', actions.onMenu));
 
-    card.appendChild(badge);
+    card.appendChild(stars);
     card.appendChild(h);
     card.appendChild(sub);
     card.appendChild(row);

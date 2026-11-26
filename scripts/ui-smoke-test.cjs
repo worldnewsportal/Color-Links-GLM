@@ -120,7 +120,7 @@ setTimeout(() => {
 
   // next level button
   const btns = [...overlay.querySelectorAll('.dialog-actions .btn')];
-  const nextBtn = btns.find(b => b.textContent === 'Next Level');
+  const nextBtn = btns.find(b => b.textContent === 'Next Level' || b.textContent === 'المستوى التالي');
   check('next button present', !!nextBtn);
   nextBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
   setTimeout(() => {

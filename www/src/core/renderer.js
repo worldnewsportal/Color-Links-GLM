@@ -4,9 +4,10 @@
 
   var CL = globalThis.ColorLink = globalThis.ColorLink || {};
 
-  var COLORS = ['#FF5A6E', '#3FA9F5', '#FFC24B', '#5BD07C', '#B06AF5', '#FF8A50'];
-  var COLORS_LIGHT = ['#FF8A98', '#7CC4FF', '#FFD98A', '#8FE3A5', '#CD9BFF', '#FFB08A'];
-  var GLOW = ['#FF2D4D', '#0F82E8', '#F5A300', '#2FAE52', '#8B3DE8', '#F26430'];
+  var COLORS = ['#F44336', '#2196F3', '#FFD54F', '#4CAF50', '#AB47BC', '#FF9800'];
+  var GLOW = ['#C62828', '#1565C0', '#F9A825', '#2E7D32', '#7B1FA2', '#E65100'];
+  var CELL = '#4a148c';
+  var CELL_EDGE = 'rgba(255,255,255,0.10)';
 
   function Renderer(canvas) {
     this.canvas = canvas;
@@ -61,11 +62,10 @@
     var m = this.metrics;
     if (!m) return;
     var cell = m.cell;
-    var dark = this.theme === 'dark';
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.045)' : 'rgba(20,40,90,0.06)';
-    roundRect(ctx, m.ox, m.oy, m.bw, m.bh, cell * 0.28);
+    ctx.fillStyle = 'rgba(50, 12, 95, 0.30)';
+    roundRect(ctx, m.ox - cell * 0.12, m.oy - cell * 0.12, m.bw + cell * 0.24, m.bh + cell * 0.24, cell * 0.3);
     ctx.fill();
 
     for (var yy = 0; yy < m.h; yy++) {
@@ -73,14 +73,27 @@
         var idx = yy * m.w + xx;
         var px = m.ox + xx * cell, py = m.oy + yy * cell;
         if (board.isBlocked(idx)) {
-          ctx.fillStyle = dark ? 'rgba(10,14,30,0.55)' : 'rgba(30,45,80,0.25)';
-          roundRect(ctx, px + 3, py + 3, cell - 6, cell - 6, cell * 0.22);
+          ctx.fillStyle = 'rgba(20, 4, 45, 0.92)';
+          roundRect(ctx, px + 2, py + 2, cell - 4, cell - 4, cell * 0.16);
           ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+          ctx.lineWidth = Math.max(2, cell * 0.06);
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(px + cell * 0.3, py + cell * 0.3);
+          ctx.lineTo(px + cell * 0.7, py + cell * 0.7);
+          ctx.moveTo(px + cell * 0.7, py + cell * 0.3);
+          ctx.lineTo(px + cell * 0.3, py + cell * 0.7);
+          ctx.stroke();
           continue;
         }
-        ctx.fillStyle = dark ? 'rgba(255,255,255,0.028)' : 'rgba(20,40,90,0.035)';
-        roundRect(ctx, px + 2, py + 2, cell - 4, cell - 4, cell * 0.18);
+        ctx.fillStyle = CELL;
+        roundRect(ctx, px + 2, py + 2, cell - 4, cell - 4, cell * 0.16);
         ctx.fill();
+        ctx.strokeStyle = CELL_EDGE;
+        ctx.lineWidth = 1;
+        roundRect(ctx, px + 2.5, py + 2.5, cell - 5, cell - 5, cell * 0.15);
+        ctx.stroke();
       }
     }
 
@@ -127,7 +140,7 @@
         var endIdx = board.endpoints[c][e];
         var isInPath = path.indexOf(endIdx) !== -1;
         var cpt = this.cellCenter(endIdx);
-        var r = cell * (isInPath ? 0.3 : 0.26);
+        var r = cell * (isInPath ? 0.3 : 0.27);
         ctx.save();
         ctx.shadowColor = GLOW[c % GLOW.length];
         ctx.shadowBlur = cell * 0.5;
@@ -136,17 +149,16 @@
         ctx.arc(cpt[0], cpt[1], r, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.lineWidth = Math.max(2, cell * 0.055);
+        ctx.beginPath();
+        ctx.arc(cpt[0], cpt[1], r, 0, Math.PI * 2);
+        ctx.stroke();
         if (isInPath) {
           ctx.fillStyle = COLORS[c % COLORS.length];
           ctx.beginPath();
           ctx.arc(cpt[0], cpt[1], r * 0.55, 0, Math.PI * 2);
           ctx.fill();
-        } else {
-          ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-          ctx.lineWidth = Math.max(1.5, cell * 0.05);
-          ctx.beginPath();
-          ctx.arc(cpt[0], cpt[1], r + cell * 0.09, 0, Math.PI * 2);
-          ctx.stroke();
         }
       }
     }

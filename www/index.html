@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#10162a">
+  <meta name="theme-color" content="#4a90d9">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Color Link</title>
   <link rel="stylesheet" href="styles/main.css">
@@ -15,71 +15,111 @@
   <div id="app">
 
     <!-- MAIN MENU -->
-    <section id="screen-menu" class="screen active">
+    <section id="screen-menu" class="screen active screen-sky">
       <div class="bg-decor" aria-hidden="true">
-        <span class="orb orb-1"></span>
-        <span class="orb orb-2"></span>
-        <span class="orb orb-3"></span>
-        <span class="orb orb-4"></span>
+        <svg class="island island-1" viewBox="0 0 120 100">
+          <path d="M10 55 Q60 20 110 55 L95 78 Q60 92 25 78 Z" fill="#795548"/>
+          <path d="M10 55 Q60 30 110 55 Q60 72 10 55 Z" fill="#8bc34a"/>
+          <rect x="55" y="18" width="10" height="20" rx="4" fill="#795548"/>
+          <circle cx="60" cy="14" r="16" fill="#4caf50"/>
+          <circle cx="48" cy="22" r="10" fill="#4caf50"/>
+          <circle cx="72" cy="22" r="10" fill="#4caf50"/>
+        </svg>
+        <svg class="island island-2" viewBox="0 0 120 100">
+          <path d="M10 55 Q60 20 110 55 L95 78 Q60 92 25 78 Z" fill="#795548"/>
+          <path d="M10 55 Q60 30 110 55 Q60 72 10 55 Z" fill="#8bc34a"/>
+          <rect x="55" y="18" width="10" height="20" rx="4" fill="#795548"/>
+          <circle cx="60" cy="14" r="16" fill="#4caf50"/>
+          <circle cx="48" cy="22" r="10" fill="#4caf50"/>
+          <circle cx="72" cy="22" r="10" fill="#4caf50"/>
+        </svg>
+        <svg class="island island-3" viewBox="0 0 120 100">
+          <path d="M10 55 Q60 20 110 55 L95 78 Q60 92 25 78 Z" fill="#795548"/>
+          <path d="M10 55 Q60 30 110 55 Q60 72 10 55 Z" fill="#8bc34a"/>
+          <rect x="55" y="18" width="10" height="20" rx="4" fill="#795548"/>
+          <circle cx="60" cy="14" r="16" fill="#4caf50"/>
+          <circle cx="48" cy="22" r="10" fill="#4caf50"/>
+          <circle cx="72" cy="22" r="10" fill="#4caf50"/>
+        </svg>
+        <span class="cloud cloud-1"></span>
+        <span class="cloud cloud-2"></span>
       </div>
       <header class="menu-top">
-        <button id="menu-sound" class="icon-btn round" data-label="sound" aria-label="Sound"></button>
-        <button id="menu-theme" class="icon-btn round" data-label="theme" aria-label="Theme"></button>
+        <div class="coin-counter">
+          <svg viewBox="0 0 24 24" class="ic coin"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#B8860B">C</text></svg>
+          <b id="menu-coins">0</b>
+        </div>
+        <div class="menu-top-actions">
+          <button id="menu-sound" class="icon-btn round" data-label="sound" aria-label="Sound"></button>
+          <button id="menu-theme" class="icon-btn round" data-label="theme" aria-label="Theme"></button>
+        </div>
       </header>
       <div class="menu-body">
         <div class="logo" aria-hidden="true">
           <div class="logo-link">
             <span class="logo-dot d1"></span><span class="logo-dash"></span><span class="logo-dot d2"></span>
           </div>
-          <h1 class="logo-title" data-i18n="appName">COLOR LINK</h1>
-          <p class="logo-sub" data-i18n="tagline">Connect the colors</p>
+          <h1 class="logo-title">
+            <span style="color:#f44336">C</span><span style="color:#ff9800">O</span><span style="color:#ffd700">L</span><span style="color:#4caf50">O</span><span style="color:#2196f3">R</span><span style="color:#9c27b0">L</span><span style="color:#f44336">I</span><span style="color:#4caf50">N</span><span style="color:#ff9800">K</span>
+          </h1>
+          <p class="logo-sub" data-i18n="tagline">وصّل الألوان</p>
         </div>
         <div class="menu-progress card">
           <div class="progress-row">
-            <span class="progress-label" data-i18n="menu.progress">Progress</span>
+            <span class="progress-label">
+              <svg viewBox="0 0 24 24" class="ic small star"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>
+              <span data-i18n="menu.progress">التقدّم</span>
+            </span>
             <span id="menu-progress-pct" class="progress-pct">0%</span>
           </div>
           <div class="progress-bar"><div id="menu-progress-fill" class="progress-fill"></div></div>
           <div class="progress-meta">
-            <span><span data-i18n="menu.currentLevel">Level</span> <b id="menu-current-level">1</b></span>
-            <span><b id="menu-completed">0</b>/<span id="menu-total">30</span> <span data-i18n="menu.completed">completed</span></span>
+            <span><span data-i18n="menu.currentLevel">المستوى</span> <b id="menu-current-level">1</b></span>
+            <span><b id="menu-completed">0</b>/<span id="menu-total">30</span> <span data-i18n="menu.completed">مكتمل</span></span>
           </div>
         </div>
         <nav class="menu-actions">
-          <button id="btn-play" class="btn btn-primary btn-big">
+          <button id="btn-play" class="btn btn-green">
             <svg viewBox="0 0 24 24" class="ic"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-            <span data-i18n="menu.play">PLAY</span>
+            <span data-i18n="menu.play">العب</span>
           </button>
-          <button id="btn-continue" class="btn btn-secondary">
+          <button id="btn-continue" class="btn btn-blue">
             <svg viewBox="0 0 24 24" class="ic"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg>
-            <span data-i18n="menu.continue">Continue</span>
+            <span data-i18n="menu.continue">متابعة</span>
+          </button>
+          <button id="btn-levels" class="btn btn-blue">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M4 5h16v3H4zm0 5.5h16v3H4zM4 16h16v3H4z" fill="currentColor"/></svg>
+            <span data-i18n="menu.levels">اختيار المرحلة</span>
           </button>
           <div class="menu-row">
-            <button id="btn-levels" class="btn btn-ghost">
-              <svg viewBox="0 0 24 24" class="ic"><path d="M4 5h16v3H4zm0 5.5h16v3H4zM4 16h16v3H4z" fill="currentColor"/></svg>
-              <span data-i18n="menu.levels">Levels</span>
+            <button id="btn-settings" class="btn btn-purple">
+              <svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor" transform="translate(-0.9 0)"/></svg>
+              <span data-i18n="menu.settings">الإعدادات</span>
             </button>
-            <button id="btn-stats" class="btn btn-ghost">
+            <button id="btn-stats" class="btn btn-orange">
               <svg viewBox="0 0 24 24" class="ic"><path d="M5 12h3v8H5zm5.5-6h3v14h-3zM16 9h3v11h-3z" fill="currentColor"/></svg>
-              <span data-i18n="menu.stats">Statistics</span>
+              <span data-i18n="menu.stats">الإحصائيات</span>
             </button>
           </div>
-          <button id="btn-settings" class="btn btn-ghost">
-            <svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor" transform="translate(-0.9 0)"/></svg>
-            <span data-i18n="menu.settings">Settings</span>
-          </button>
         </nav>
+        <div class="trophy-bar">
+          <svg viewBox="0 0 24 24" class="ic small"><path d="M6 3h12v2h3v3a5 5 0 0 1-4.6 5A6 6 0 0 1 13 16v2h3v3H8v-3h3v-2a6 6 0 0 1-3.4-3A5 5 0 0 1 3 8V5h3V3zm-1 4v1a3 3 0 0 0 2 2.8V7H5zm14 0h-2v3.8A3 3 0 0 0 19 8V7z" fill="#FFD700"/></svg>
+          <span data-i18n="menu.enjoy">استمتع باللعبة!</span>
+        </div>
       </div>
     </section>
 
     <!-- LEVEL SELECTION -->
-    <section id="screen-levels" class="screen">
-      <header class="topbar">
+    <section id="screen-levels" class="screen screen-sky">
+      <header class="topbar topbar-purple">
         <button class="icon-btn back" data-nav="menu" aria-label="Back">
           <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
         </button>
-        <h2 class="topbar-title" data-i18n="levels.title">Select Level</h2>
-        <span class="topbar-chip" id="levels-progress-chip">0/30</span>
+        <h2 class="topbar-title" data-i18n="levels.title">اختيار المرحلة</h2>
+        <span class="topbar-chip star-chip">
+          <svg viewBox="0 0 24 24" class="ic small"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>
+          <span id="levels-progress-chip">0/30</span>
+        </span>
       </header>
       <div class="screen-scroll">
         <div id="levels-grid" class="levels-grid"></div>
@@ -87,104 +127,104 @@
     </section>
 
     <!-- GAMEPLAY -->
-    <section id="screen-game" class="screen">
+    <section id="screen-game" class="screen screen-purple">
       <header class="topbar game-topbar">
-        <button class="icon-btn back" id="game-back" aria-label="Back">
+        <button id="game-back" class="icon-btn round btn-purple-solid" aria-label="Back">
           <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
         </button>
         <div class="game-title">
-          <span class="game-level-chip" id="game-level-label">Level 1</span>
-          <span class="game-sub" id="game-difficulty">Easy</span>
+          <span class="game-level-chip" id="game-level-label">المستوى 1</span>
         </div>
         <div class="topbar-actions">
-          <button id="btn-undo" class="icon-btn" aria-label="Undo">
+          <button id="btn-undo" class="icon-btn round btn-blue-solid" aria-label="Undo">
             <svg viewBox="0 0 24 24" class="ic"><path d="M12.5 8c-2.6 0-5 .9-6.9 2.6L3 8v7h7l-2.7-2.7A6 6 0 1 1 12.5 20h.1v-2.5h-.1a3.5 3.5 0 1 0-3.4-4.4L12.5 8z" fill="currentColor" transform="translate(0 -1)"/></svg>
           </button>
-          <button id="btn-hint" class="icon-btn" aria-label="Hint">
-            <svg viewBox="0 0 24 24" class="ic"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2zM9.5 19h5v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1z" fill="currentColor"/></svg>
+          <button id="btn-hint" class="icon-btn round btn-yellow-solid" aria-label="Hint">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2zM9.5 19h5v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1z" fill="#5d4037"/></svg>
             <span id="hint-count" class="badge">3</span>
           </button>
-          <button id="btn-restart" class="icon-btn" aria-label="Restart">
+          <button id="btn-restart" class="icon-btn round btn-green-solid" aria-label="Restart">
             <svg viewBox="0 0 24 24" class="ic"><path d="M17.7 6.3A8 8 0 1 0 19.5 14h-2.1a6 6 0 1 1-1.1-6.3L13 11h7V4l-2.3 2.3z" fill="currentColor"/></svg>
           </button>
         </div>
       </header>
       <div class="game-status">
-        <span class="status-chip"><span data-i18n="game.moves">Moves</span>: <b id="game-moves">0</b></span>
-        <span class="status-chip"><span data-i18n="game.time">Time</span>: <b id="game-time">00:00</b></span>
-        <span class="status-chip"><span data-i18n="game.connected">Connected</span>: <b id="game-connected">0/2</b></span>
+        <span class="status-chip"><span data-i18n="game.moves">الحركات</span>: <b id="game-moves">0</b></span>
+        <span class="status-chip"><span data-i18n="game.time">الوقت</span>: <b id="game-time">00:00</b></span>
+        <span class="status-chip"><span data-i18n="game.connected">متصلة</span>: <b id="game-connected">0/2</b></span>
       </div>
       <div id="board-wrap" class="board-wrap">
         <canvas id="board-canvas"></canvas>
       </div>
-      <p class="game-hint-text" data-i18n="game.hintText">Drag between matching dots to connect them</p>
+      <p class="game-hint-text" data-i18n="game.hintText">اسحب بين النقطتين المتشابهتين لتوصيلهما</p>
     </section>
 
     <!-- SETTINGS -->
-    <section id="screen-settings" class="screen">
-      <header class="topbar">
+    <section id="screen-settings" class="screen screen-sky">
+      <header class="topbar topbar-purple">
         <button class="icon-btn back" data-nav="menu" aria-label="Back">
           <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
         </button>
-        <h2 class="topbar-title" data-i18n="settings.title">Settings</h2>
+        <h2 class="topbar-title" data-i18n="settings.title">الإعدادات</h2>
         <span class="topbar-chip-spacer"></span>
       </header>
       <div class="screen-scroll">
         <div class="settings-list card">
           <div class="setting-row">
-            <span data-i18n="settings.sound">Sound effects</span>
+            <span data-i18n="settings.sound">المؤثرات الصوتية</span>
             <label class="switch"><input type="checkbox" id="set-sound"><span class="slider"></span></label>
           </div>
           <div class="setting-row">
-            <span data-i18n="settings.music">Background music</span>
+            <span data-i18n="settings.music">الموسيقى</span>
             <label class="switch"><input type="checkbox" id="set-music"><span class="slider"></span></label>
           </div>
           <div class="setting-row">
-            <span data-i18n="settings.vibration">Vibration</span>
+            <span data-i18n="settings.vibration">الاهتزاز</span>
             <label class="switch"><input type="checkbox" id="set-vibration"><span class="slider"></span></label>
           </div>
         </div>
         <div class="settings-list card">
           <div class="setting-row column">
-            <span data-i18n="settings.language">Language</span>
+            <span data-i18n="settings.language">اللغة</span>
             <div class="segmented" id="set-language">
               <button data-value="en">English</button>
               <button data-value="ar">العربية</button>
             </div>
           </div>
           <div class="setting-row column">
-            <span data-i18n="settings.theme">Theme</span>
+            <span data-i18n="settings.theme">المظهر</span>
             <div class="segmented" id="set-theme">
-              <button data-value="light" data-i18n="theme.light">Light</button>
-              <button data-value="dark" data-i18n="theme.dark">Dark</button>
+              <button data-value="light" data-i18n="theme.light">فاتح</button>
+              <button data-value="dark" data-i18n="theme.dark">داكن</button>
             </div>
           </div>
         </div>
-        <button id="btn-reset" class="btn btn-danger">
+        <button id="btn-reset" class="btn btn-red">
           <svg viewBox="0 0 24 24" class="ic"><path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2z" fill="currentColor"/></svg>
-          <span data-i18n="settings.reset">Reset progress</span>
+          <span data-i18n="settings.reset">إعادة تعيين التقدّم</span>
         </button>
         <p class="version-note">Color Link — Phase 1 · v1.0.0</p>
       </div>
     </section>
 
     <!-- STATISTICS -->
-    <section id="screen-stats" class="screen">
-      <header class="topbar">
+    <section id="screen-stats" class="screen screen-sky">
+      <header class="topbar topbar-purple">
         <button class="icon-btn back" data-nav="menu" aria-label="Back">
           <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
         </button>
-        <h2 class="topbar-title" data-i18n="stats.title">Statistics</h2>
+        <h2 class="topbar-title" data-i18n="stats.title">الإحصائيات</h2>
         <span class="topbar-chip-spacer"></span>
       </header>
       <div class="screen-scroll">
         <div class="stats-grid">
-          <div class="stat-card card"><span class="stat-value" id="stat-completed">0</span><span class="stat-label" data-i18n="stats.completed">Levels completed</span></div>
-          <div class="stat-card card"><span class="stat-value" id="stat-current">1</span><span class="stat-label" data-i18n="stats.current">Current level</span></div>
-          <div class="stat-card card"><span class="stat-value" id="stat-playtime">00:00</span><span class="stat-label" data-i18n="stats.playtime">Total playtime</span></div>
-          <div class="stat-card card"><span class="stat-value" id="stat-moves">0</span><span class="stat-label" data-i18n="stats.moves">Total moves</span></div>
-          <div class="stat-card card"><span class="stat-value" id="stat-hints">0</span><span class="stat-label" data-i18n="stats.hints">Hints used</span></div>
-          <div class="stat-card card"><span class="stat-value" id="stat-sessions">0</span><span class="stat-label" data-i18n="stats.sessions">Sessions</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-completed">0</span><span class="stat-label" data-i18n="stats.completed">مستويات مكتملة</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-current">1</span><span class="stat-label" data-i18n="stats.current">المستوى الحالي</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-coins">0</span><span class="stat-label" data-i18n="stats.coins">العملات</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-playtime">00:00</span><span class="stat-label" data-i18n="stats.playtime">إجمالي وقت اللعب</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-moves">0</span><span class="stat-label" data-i18n="stats.moves">إجمالي الحركات</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-hints">0</span><span class="stat-label" data-i18n="stats.hints">التلميحات المستخدمة</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-sessions">0</span><span class="stat-label" data-i18n="stats.sessions">الجلسات</span></div>
         </div>
       </div>
     </section>

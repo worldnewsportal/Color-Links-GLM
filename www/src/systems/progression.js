@@ -5,11 +5,11 @@
   var CL = globalThis.ColorLink = globalThis.ColorLink || {};
 
   var DEFAULTS = {
-    settings: { sound: true, music: true, vibration: true, lang: 'en', theme: 'dark' },
+    settings: { sound: true, music: true, vibration: true, lang: 'ar', theme: 'dark' },
     unlocked: 1,
     lastPlayed: 0,
     completed: {},
-    stats: { playtimeMs: 0, hintsUsed: 0, totalMoves: 0, sessions: 0 }
+    stats: { playtimeMs: 0, hintsUsed: 0, totalMoves: 0, sessions: 0, coins: 0 }
   };
 
   var state = null;
@@ -61,6 +61,7 @@
       date: Date.now()
     };
     if (id >= state.unlocked && id < totalLevels()) state.unlocked = id + 1;
+    state.stats.coins += better ? 15 : 10;
     state.lastPlayed = id;
     save();
     return better;
