@@ -189,5 +189,28 @@ check('chapterOf(1) = 1', CL.LevelManager.chapterOf(1).id === 1);
 check('chapterOf(30) = 2', CL.LevelManager.chapterOf(30).id === 2);
 check('chapterOf(130) = 5', CL.LevelManager.chapterOf(130).id === 5);
 
+// --- i18n key coverage: every key used in source must exist in en and ar
+(function () {
+  const used = new Set();
+  const scan = (dir) => {
+    for (const f of fs.readdirSync(dir)) {
+      const p = path.join(dir, f);
+      if (fs.statSync(p).isDirectory()) { scan(p); continue; }
+      if (!p.endsWith('.js') && !p.endsWith('.html')) continue;
+      const src = fs.readFileSync(p, 'utf8');
+      for (const m of src.matchAll(/\bT\('([^']+)'\)/g)) used.add(m[1]);
+      for (const m of src.matchAll(/\.t\('([^']+)'\)/g)) used.add(m[1]);
+      for (const m of src.matchAll(/data-i18n="([^"]+)"/g)) used.add(m[1]);
+    }
+  };
+  scan(path.join(root, 'www'));
+  const strings = CL.I18N.strings;
+  for (const lang of Object.keys(strings)) {
+    const missing = [...used].filter((k) => !(k in strings[lang]));
+    check(`i18n coverage (${lang})`, missing.length === 0);
+    if (missing.length) console.error('  missing:', missing.join(', '));
+  }
+})();
+
 console.log(`\nSmoke tests: ${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

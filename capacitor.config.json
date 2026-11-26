@@ -1,6 +1,6 @@
 {
-  "appId": "com.colorlink.game",
-  "appName": "Color Link",
+  "appId": "com.lawnak.game",
+  "appName": "Lawnak",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {

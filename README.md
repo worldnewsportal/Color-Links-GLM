@@ -1,4 +1,4 @@
-# Color Link — Phase 2
+# لَوْنَك (Lawnak) — Color Link Puzzle · Phase 2
 
 A complete, offline-first mobile color-connecting puzzle game (Flow-style) built with
 HTML5, CSS3 and vanilla JavaScript. No frameworks, no backend, no external network
@@ -124,21 +124,23 @@ npx cap sync android
 npx cap open android     # build/run from Android Studio
 ```
 
-### GitHub Actions APK build
+### Automatic APK + GitHub Release on every push
 
-The repo includes `.github/workflows/android-build.yml`. Push the repository to
-GitHub with the Android platform checked in (`android/`), and the workflow builds
-a debug APK on every push to `main` and uploads it as a build artifact.
+The repo includes `.github/workflows/android-build.yml`. **Every push to any
+branch** automatically:
 
-Typical first-time sequence:
+1. Validates all 130 levels.
+2. Adds/syncs the Android platform (Capacitor).
+3. Applies the committed game icons (`scripts/android-icons/`).
+4. Builds a **signed release APK** (ephemeral CI keystore).
+5. Publishes a **public GitHub Release** (e.g. `v2.0.0-b12`) with a shareable
+   `Lawnak-v2.0.0-b12.apk` attached — see the repo's **Releases** page.
 
-```bash
-npm install
-npx cap add android
-git add -A
-git commit -m "Add Android platform"
-git push origin main
-```
+You do not need `android/` checked in; the workflow generates it. To install a
+downloaded APK, enable "Install from unknown sources" on the device. Because the
+signing key is regenerated per build, uninstall the previous build before
+installing an update. For stable signing, create a keystore, base64-encode it
+into a `KEYSTORE_BASE64` secret, and extend the workflow's keystore step.
 
 ## Notes
 
