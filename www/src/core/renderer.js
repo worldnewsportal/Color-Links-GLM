@@ -4,10 +4,29 @@
 
   var CL = globalThis.ColorLink = globalThis.ColorLink || {};
 
-  var COLORS = ['#F44336', '#2196F3', '#FFD54F', '#4CAF50', '#AB47BC', '#FF9800'];
-  var GLOW = ['#C62828', '#1565C0', '#F9A825', '#2E7D32', '#7B1FA2', '#E65100'];
-  var CELL = '#4a148c';
-  var CELL_EDGE = 'rgba(255,255,255,0.10)';
+  var COLORS = ['#FF4D5E', '#33A9FF', '#FFD166', '#35D07F', '#FF9838', '#B569FF', '#FF6FB5', '#29D2E4'];
+  var GLOW = ['#C2182B', '#0F6FD8', '#B98900', '#1E9E57', '#C46A00', '#7A3DD6', '#C13D8A', '#0E9AAC'];
+  function themePalette(theme) {
+    if (theme === 'light') {
+      return {
+        cell: '#F5F0FF',
+        edge: 'rgba(40,25,90,0.16)',
+        shadow: 'rgba(40,25,110,0.20)',
+        blocked: 'rgba(78,58,140,0.32)',
+        blockedX: 'rgba(58,42,110,0.60)',
+        lockBg: 'rgba(255,255,255,0.60)'
+      };
+    }
+    return {
+      cell: '#48188D',
+      edge: 'rgba(255,255,255,0.10)',
+      shadow: 'rgba(50,12,95,0.30)',
+      blocked: 'rgba(20,4,45,0.92)',
+      blockedX: 'rgba(255,255,255,0.22)',
+      lockBg: 'rgba(15,5,35,0.55)'
+    };
+  }
+  Renderer.prototype.palette = function () { return themePalette(this.theme); };
 
   function Renderer(canvas) {
     this.canvas = canvas;
@@ -171,7 +190,7 @@
       var cpt = this.cellCenter(i);
       var color = CL.Renderer.PALETTE[key % CL.Renderer.PALETTE.length];
       ctx.save();
-      ctx.fillStyle = 'rgba(15, 5, 35, 0.55)';
+      ctx.fillStyle = this.palette().lockBg;
       roundRect(ctx, cpt[0] - cell * 0.34, cpt[1] - cell * 0.34, cell * 0.68, cell * 0.68, cell * 0.14);
       ctx.fill();
       ctx.strokeStyle = color;
@@ -194,7 +213,8 @@
     var cell = m.cell;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    ctx.fillStyle = 'rgba(50, 12, 95, 0.30)';
+    var tp = this.palette();
+    ctx.fillStyle = tp.shadow;
     roundRect(ctx, m.ox - cell * 0.12, m.oy - cell * 0.12, m.bw + cell * 0.24, m.bh + cell * 0.24, cell * 0.3);
     ctx.fill();
 
@@ -203,10 +223,10 @@
         var idx = yy * m.w + xx;
         var px = m.ox + xx * cell, py = m.oy + yy * cell;
         if (board.isBlocked(idx)) {
-          ctx.fillStyle = 'rgba(20, 4, 45, 0.92)';
+          ctx.fillStyle = tp.blocked;
           roundRect(ctx, px + 2, py + 2, cell - 4, cell - 4, cell * 0.16);
           ctx.fill();
-          ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+          ctx.strokeStyle = tp.blockedX;
           ctx.lineWidth = Math.max(2, cell * 0.06);
           ctx.lineCap = 'round';
           ctx.beginPath();
@@ -217,10 +237,10 @@
           ctx.stroke();
           continue;
         }
-        ctx.fillStyle = CELL;
+        ctx.fillStyle = tp.cell;
         roundRect(ctx, px + 2, py + 2, cell - 4, cell - 4, cell * 0.16);
         ctx.fill();
-        ctx.strokeStyle = CELL_EDGE;
+        ctx.strokeStyle = tp.edge;
         ctx.lineWidth = 1;
         roundRect(ctx, px + 2.5, py + 2.5, cell - 5, cell - 5, cell * 0.15);
         ctx.stroke();
@@ -246,7 +266,7 @@
       for (var bk = 0; bk < path.length; bk++) {
         if (board.mech.bridge[path[bk]]) { usesBridge = true; break; }
       }
-      if (usesBridge) ctx.lineWidth = cell * 0.3;
+      ctx.lineWidth = cell * (usesBridge ? 0.44 : 0.32);
       ctx.beginPath();
       for (var k = 0; k < path.length; k++) {
         var pt = this.cellCenter(path[k]);
@@ -258,7 +278,7 @@
       ctx.restore();
 
       ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-      ctx.lineWidth = cell * 0.13;
+      ctx.lineWidth = cell * (usesBridge ? 0.18 : 0.14);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.beginPath();
@@ -278,7 +298,7 @@
         var endIdx = board.endpoints[p][e];
         var isInPath = !!board.paths[p] && board.paths[p].indexOf(endIdx) !== -1;
         var cpt = this.cellCenter(endIdx);
-        var r = cell * (isInPath ? 0.3 : 0.27);
+        var r = cell * (isInPath ? 0.31 : 0.29);
         ctx.save();
         ctx.shadowColor = GLOW[p % GLOW.length];
         ctx.shadowBlur = cell * 0.5;

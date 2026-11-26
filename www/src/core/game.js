@@ -119,7 +119,11 @@
       }
       if (res.cut !== undefined) CL.Audio.play('pop');
       else CL.Audio.play('draw', this.moves);
-      if (res.completedPath) CL.Audio.play('connect');
+      if (res.completedPath) {
+        CL.Audio.play('connect');
+        var done = this.board.paths[this.activeColor];
+        if (done) this.renderer.burst([done[0], done[done.length - 1]], 14);
+      }
       this.vibrate(res.cut !== undefined ? 20 : 8);
       this.renderer.draw(this.board);
       this.handlers.onStateChange(this.state());

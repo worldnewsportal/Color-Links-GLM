@@ -19,10 +19,15 @@ functionality and player progress (versioned save with safe migration).
   scroll/zoom prevention, and pointer-cancel handling.
 
 ### Phase 2 — levels & chapters
-- **130 predefined levels**, all machine-verified (structure + witness solution +
+- **130 curriculum-designed levels**, all machine-verified (structure + witness solution +
   solver re-check, see `scripts/validate-levels.js`).
-- **5 themed chapters**: Beginner (1–26), Intermediate (27–52), Advanced (53–78),
-  Expert (79–104), Master (105–130).
+- **5 themed chapters** with a professionally measured difficulty curve
+  (`scripts/generate-curriculum.cjs` scores every level — grid size, pair count,
+  winding, obstacles, mechanics — and orders them so difficulty climbs smoothly
+  from trivial 5×5/2-pair openers to a near-impossible 8×8, 8-pair full-board
+  finale that is still provably solvable):
+  Beginner (1–26), Intermediate (27–52), Advanced (53–78), Expert (79–104),
+  Master (105–130).
 - **Chapter selection screen** with per-chapter description, completion bar,
   star totals and an 80%-completion unlock rule.
 
