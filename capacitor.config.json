@@ -1,0 +1,12 @@
+{
+  "appId": "com.lawnak.game",
+  "appName": "Lawnak",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

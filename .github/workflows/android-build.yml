@@ -1,0 +1,102 @@
+name: Android APK Build & Release
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Validate levels
+        run: node scripts/validate-levels.js
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add Android platform (if missing)
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Apply game icons
+        run: |
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp scripts/android-icons/mipmap-$d/*.png android/app/src/main/res/mipmap-$d/
+          done
+
+      - name: Create signing keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore release.keystore \
+            -alias lawnak \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass lawnak-ci-2024 -keypass lawnak-ci-2024 \
+            -dname "CN=Lawnak, OU=Game, O=Lawnak, C=SA"
+
+      - name: Build signed release APK
+        run: |
+          cd android
+          cat >> app/build.gradle <<'GRADLE'
+
+          android {
+              signingConfigs {
+                  ciRelease {
+                      storeFile file("../../release.keystore")
+                      storePassword "lawnak-ci-2024"
+                      keyAlias "lawnak"
+                      keyPassword "lawnak-ci-2024"
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.ciRelease
+                  }
+              }
+          }
+          GRADLE
+          chmod +x gradlew
+          ./gradlew assembleRelease
+
+      - name: Create GitHub Release with APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          BUILD=${{ github.run_number }}
+          BRANCH=${GITHUB_REF_NAME//\//-}
+          TAG="v${VERSION}-b${BUILD}"
+          cp android/app/build/outputs/apk/release/app-release.apk "Lawnak-v${VERSION}-b${BUILD}.apk"
+          cat > /tmp/notes.md <<'NOTES'
+          ## 🎮 لَوْنَك (Lawnak) — لعبة توصيل الألوان
+
+          حمّل ملف `.apk` ونصّبه مباشرة على هاتف أندرويد (فعّل "التثبيت من مصادر غير معروفة").
+
+          - 🧩 130 مستوى في 5 فصول
+          - ⭐ نظام نجوم وعملات ومكافآت
+          - 📅 تحدي يومي وإنجازات
+          - 🌙 ثيم فاتح/داكن · عربي/إنجليزي
+
+          > ملاحظة: مفتاح التوقيع يُنشأ تلقائياً في كل بناء، لذا عند تحديث التطبيق أزِل النسخة القديمة أولاً ثم ثبّت الجديدة.
+          NOTES
+          gh release create "$TAG" "Lawnak-v${VERSION}-b${BUILD}.apk" \
+            --title "Lawnak v${VERSION} — build ${BUILD} (${BRANCH})" \
+            --notes-file /tmp/notes.md
