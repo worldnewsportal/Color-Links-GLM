@@ -135,6 +135,7 @@
         announceMechanics(level);
       }
       ctx.show('game');
+      game.resize();
     }
 
     document.getElementById('game-back').addEventListener('click', function () {

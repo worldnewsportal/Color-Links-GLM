@@ -102,6 +102,14 @@ check('level label set', doc.getElementById('game-level-label').textContent.incl
 const game = CL.app.game;
 check('board loaded 5x5 2 pairs', game.board.w === 5 && game.board.pairCount === 2);
 
+// --- regression: opening a level must paint the canvas (load calls layout+draw)
+let drawsOnLoad = 0;
+const origDraw = game.renderer.draw.bind(game.renderer);
+game.renderer.draw = function (b, o) { drawsOnLoad++; return origDraw(b, o); };
+game.restart();
+check('load paints board (no blank screen)', drawsOnLoad >= 1 && game.renderer.metrics && game.renderer.metrics.cell > 0);
+game.renderer.draw = origDraw;
+
 // --- draw a full solution for level 1 via synthetic pointer events
 const canvas = doc.getElementById('board-canvas');
 function fire(type, x, y, pointerId) {

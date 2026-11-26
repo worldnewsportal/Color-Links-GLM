@@ -50,6 +50,7 @@
     this.renderer.setGhost(null);
     this.renderer.particles.length = 0;
     this.renderer.layout(this.board);
+    this.renderer.draw(this.board);
     if (typeof idOrLevel === 'number') {
       CL.Progression.addStats('attempts', 1);
     }
