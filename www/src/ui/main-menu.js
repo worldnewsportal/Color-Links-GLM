@@ -9,7 +9,7 @@
 
     function refresh() {
       var prog = CL.Progression;
-      document.getElementById('menu-coins').textContent = prog.getStats().coins;
+      document.getElementById('menu-coins').textContent = CL.Coins.balance();
       document.getElementById('menu-stars').textContent = prog.totalStars() + '/' + prog.maxStars();
       document.getElementById('menu-current-level').textContent = prog.currentLevel();
       document.getElementById('menu-completed').textContent = prog.completedCount();

@@ -234,9 +234,8 @@
       var path = board.paths[c];
       if (!path || path.length < 1) continue;
       var color = COLORS[c % COLORS.length];
-      var connected = board.isConnected(c);
       ctx.save();
-      if (connected) {
+      if (board.isConnected(c)) {
         ctx.shadowColor = GLOW[c % GLOW.length];
         ctx.shadowBlur = cell * 0.45;
       }
@@ -270,16 +269,20 @@
       }
       if (path.length === 1) ctx.lineTo(pt2[0] + 0.01, pt2[1]);
       ctx.stroke();
+    }
 
+    /* Endpoint dots render for every pair, connected or not. */
+    for (var p = 0; p < board.pairCount; p++) {
+      var connected = board.isConnected(p);
       for (var e = 0; e < 2; e++) {
-        var endIdx = board.endpoints[c][e];
-        var isInPath = path.indexOf(endIdx) !== -1;
+        var endIdx = board.endpoints[p][e];
+        var isInPath = !!board.paths[p] && board.paths[p].indexOf(endIdx) !== -1;
         var cpt = this.cellCenter(endIdx);
         var r = cell * (isInPath ? 0.3 : 0.27);
         ctx.save();
-        ctx.shadowColor = GLOW[c % GLOW.length];
+        ctx.shadowColor = GLOW[p % GLOW.length];
         ctx.shadowBlur = cell * 0.5;
-        ctx.fillStyle = isInPath ? '#FFFFFF' : COLORS[c % COLORS.length];
+        ctx.fillStyle = isInPath ? '#FFFFFF' : COLORS[p % COLORS.length];
         ctx.beginPath();
         ctx.arc(cpt[0], cpt[1], r, 0, Math.PI * 2);
         ctx.fill();
@@ -290,7 +293,7 @@
         ctx.arc(cpt[0], cpt[1], r, 0, Math.PI * 2);
         ctx.stroke();
         if (isInPath) {
-          ctx.fillStyle = COLORS[c % COLORS.length];
+          ctx.fillStyle = COLORS[p % COLORS.length];
           ctx.beginPath();
           ctx.arc(cpt[0], cpt[1], r * 0.55, 0, Math.PI * 2);
           ctx.fill();

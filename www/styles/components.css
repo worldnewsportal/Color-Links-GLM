@@ -194,8 +194,8 @@
 
 .dialog h3 { font-size: 1.4rem; margin-bottom: 10px; }
 .dialog-msg { color: var(--panel-dim); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
-.dialog-actions { display: flex; gap: 10px; }
-.dialog-actions .btn { flex: 1; padding: 12px 10px; font-size: 0.95rem; text-shadow: none; }
+.dialog-actions { display: flex; gap: 8px; }
+.dialog-actions .btn { flex: 1; min-width: 0; padding: 12px 8px; font-size: 0.9rem; text-shadow: none; white-space: nowrap; }
 
 /* Win dialog */
 .win-stars {

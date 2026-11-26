@@ -321,6 +321,8 @@ body {
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1.05;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .logo-title span {

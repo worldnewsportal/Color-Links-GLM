@@ -15,6 +15,7 @@
     if (name === 'levels' && refreshers.levels) refreshers.levels.build();
     if (name === 'stats' && refreshers.stats) refreshers.stats.refresh();
     if (name === 'menu' && refreshers.menu) refreshers.menu.refresh();
+    if (name === 'settings' && refreshers.settings) refreshers.settings.refresh();
     if (name === 'daily' && refreshers.daily) {
       refreshers.daily.refresh();
       refreshers.daily.startTick();

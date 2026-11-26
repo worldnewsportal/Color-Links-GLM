@@ -10,7 +10,7 @@
       var stats = prog.getStats();
       document.getElementById('stat-completed').textContent = prog.completedCount();
       document.getElementById('stat-current').textContent = prog.currentLevel();
-      document.getElementById('stat-coins').textContent = stats.coins;
+      document.getElementById('stat-coins').textContent = CL.Coins.balance();
       document.getElementById('stat-playtime').textContent = CL.Dialogs.formatTime(Math.floor(stats.playtimeMs / 1000));
       document.getElementById('stat-moves').textContent = stats.totalMoves;
       document.getElementById('stat-hints').textContent = stats.hintsUsed;
