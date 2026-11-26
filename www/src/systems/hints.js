@@ -1,4 +1,7 @@
-/* Color Link - Hint system backed by the verified solver. */
+/* Color Link - Hint system (Phase 2).
+   3 free hints per level, then hints cost coins. Hints always come from
+   verified solutions (stored witness or solver); if no solution exists,
+   nothing is consumed. */
 (function () {
   'use strict';
 
@@ -26,6 +29,8 @@
   }
 
   function maxHints() { return MAX_HINTS; }
+
+  function cost() { return CL.Coins ? CL.Coins.HINT_COST : 15; }
 
   /* Returns { color, cells } for the next useful connection, or null. */
   function getHint(board, levelId) {
@@ -77,11 +82,33 @@
     return { color: worst, cells: path.slice(start, Math.min(path.length, start + 3)) };
   }
 
+  /* Full request flow: free allowance first, then coin cost.
+     Returns:
+       { hint: {color, cells}, free: bool }
+       { error: 'no-coins' }  - free allowance spent, not enough coins
+       null                   - no verified solution exists (nothing charged) */
+  function requestHint(board, levelId) {
+    var hint = getHint(board, levelId);
+    if (!hint) return null;
+    var left = remaining(levelId);
+    if (left > 0) {
+      useOne(levelId);
+      return { hint: hint, free: true };
+    }
+    if (!CL.Progression.spendCoins(cost(), 'hint')) {
+      return { error: 'no-coins' };
+    }
+    CL.Progression.addStats('hintsUsed', 1);
+    return { hint: hint, free: false };
+  }
+
   CL.Hints = {
     remaining: remaining,
     useOne: useOne,
     reset: reset,
     maxHints: maxHints,
-    getHint: getHint
+    cost: cost,
+    getHint: getHint,
+    requestHint: requestHint
   };
 })();

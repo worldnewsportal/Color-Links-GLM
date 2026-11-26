@@ -56,6 +56,136 @@
     ctx.closePath();
   }
 
+  /* ---- Phase 2 special tiles ---- */
+
+  Renderer.prototype.drawSpecial = function (ctx, board, idx, px, py, cell) {
+    var mech = board.mech;
+    if (mech.bridge[idx]) this.drawBridge(ctx, px, py, cell);
+    if (mech.twin[idx] !== -1) this.drawPortal(ctx, px, py, cell);
+    if (mech.dirOf[idx] !== -1) this.drawArrow(ctx, px, py, cell, mech.dirOf[idx]);
+    if (mech.restrictedMask[idx]) this.drawRestricted(ctx, board, idx, px, py, cell);
+  };
+
+  Renderer.prototype.drawBridge = function (ctx, px, py, cell) {
+    ctx.save();
+    ctx.fillStyle = '#8d6e63';
+    roundRect(ctx, px + cell * 0.14, py + cell * 0.36, cell * 0.72, cell * 0.28, cell * 0.08);
+    ctx.fill();
+    ctx.strokeStyle = '#5d4037';
+    ctx.lineWidth = Math.max(1.5, cell * 0.05);
+    roundRect(ctx, px + cell * 0.14, py + cell * 0.36, cell * 0.72, cell * 0.28, cell * 0.08);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px + cell * 0.28, py + cell * 0.36);
+    ctx.lineTo(px + cell * 0.28, py + cell * 0.64);
+    ctx.moveTo(px + cell * 0.72, py + cell * 0.36);
+    ctx.lineTo(px + cell * 0.72, py + cell * 0.64);
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  Renderer.prototype.drawPortal = function (ctx, px, py, cell) {
+    var cx = px + cell / 2, cy = py + cell / 2;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(103, 232, 249, 0.85)';
+    ctx.lineWidth = Math.max(1.5, cell * 0.055);
+    ctx.beginPath();
+    ctx.arc(cx, cy, cell * 0.3, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(129, 140, 248, 0.55)';
+    ctx.setLineDash([cell * 0.08, cell * 0.08]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, cell * 0.2, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  Renderer.prototype.drawArrow = function (ctx, px, py, cell, dirIndex) {
+    var cx = px + cell / 2, cy = py + cell / 2;
+    var a = cell * 0.2, b = cell * 0.26;
+    ctx.save();
+    ctx.translate(cx, cy);
+    if (dirIndex === 0) ctx.rotate(-Math.PI / 2);
+    else if (dirIndex === 2) ctx.rotate(Math.PI / 2);
+    else if (dirIndex === 3) ctx.rotate(Math.PI);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = Math.max(2, cell * 0.08);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-a, -b * 0.5);
+    ctx.lineTo(a * 0.4, 0);
+    ctx.lineTo(-a, b * 0.5);
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  Renderer.prototype.drawRestricted = function (ctx, board, idx, px, py, cell) {
+    var mask = board.mech.restrictedMask[idx];
+    var cx = px + cell / 2, cy = py + cell / 2;
+    var angles = { '1': -Math.PI / 2, '2': 0, '4': Math.PI / 2, '8': Math.PI };
+    ctx.save();
+    ctx.strokeStyle = 'rgba(248, 113, 113, 0.8)';
+    ctx.lineWidth = Math.max(1.5, cell * 0.06);
+    ctx.lineCap = 'round';
+    for (var bit = 1; bit <= 8; bit <<= 1) {
+      if (!(mask & bit)) continue;
+      var ang = angles[String(bit)];
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(ang);
+      ctx.beginPath();
+      ctx.moveTo(cell * 0.1, -cell * 0.24);
+      ctx.lineTo(cell * 0.24, 0);
+      ctx.lineTo(cell * 0.1, cell * 0.24);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cell * 0.3, -cell * 0.2);
+      ctx.lineTo(cell * 0.3, cell * 0.2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  };
+
+  Renderer.prototype.drawLocks = function (ctx, board, m, cell) {
+    var mech = board.mech;
+    for (var i = 0; i < mech.lockKey.length; i++) {
+      var key = mech.lockKey[i];
+      if (key === -1) continue;
+      var open = board.isConnected(key);
+      if (open && board.occupancyCount(i) === 0) {
+        /* open and empty: subtle unlocked ring */
+        var cpt0 = this.cellCenter(i);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([cell * 0.09, cell * 0.09]);
+        ctx.beginPath();
+        ctx.arc(cpt0[0], cpt0[1], cell * 0.26, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        continue;
+      }
+      if (open) continue;
+      var cpt = this.cellCenter(i);
+      var color = CL.Renderer.PALETTE[key % CL.Renderer.PALETTE.length];
+      ctx.save();
+      ctx.fillStyle = 'rgba(15, 5, 35, 0.55)';
+      roundRect(ctx, cpt[0] - cell * 0.34, cpt[1] - cell * 0.34, cell * 0.68, cell * 0.68, cell * 0.14);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = Math.max(1.5, cell * 0.06);
+      ctx.beginPath();
+      ctx.arc(cpt[0], cpt[1] - cell * 0.05, cell * 0.13, Math.PI, 0);
+      ctx.stroke();
+      ctx.fillStyle = color;
+      roundRect(ctx, cpt[0] - cell * 0.18, cpt[1] - cell * 0.06, cell * 0.36, cell * 0.28, cell * 0.06);
+      ctx.fill();
+      ctx.restore();
+    }
+  };
+
   Renderer.prototype.draw = function (board, opts) {
     opts = opts || {};
     var ctx = this.ctx;
@@ -94,6 +224,7 @@
         ctx.lineWidth = 1;
         roundRect(ctx, px + 2.5, py + 2.5, cell - 5, cell - 5, cell * 0.15);
         ctx.stroke();
+        this.drawSpecial(ctx, board, idx, px, py, cell);
       }
     }
 
@@ -112,7 +243,11 @@
       ctx.strokeStyle = color;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.lineWidth = cell * 0.42;
+      var usesBridge = false;
+      for (var bk = 0; bk < path.length; bk++) {
+        if (board.mech.bridge[path[bk]]) { usesBridge = true; break; }
+      }
+      if (usesBridge) ctx.lineWidth = cell * 0.3;
       ctx.beginPath();
       for (var k = 0; k < path.length; k++) {
         var pt = this.cellCenter(path[k]);
@@ -163,6 +298,7 @@
       }
     }
 
+    this.drawLocks(ctx, board, m, cell);
     this.drawParticles(ctx);
   };
 

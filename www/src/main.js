@@ -1,10 +1,10 @@
-/* Color Link - Bootstrap & router. */
+/* Color Link - Bootstrap & router (Phase 2 screens: daily, achievements). */
 (function () {
   'use strict';
 
   var CL = globalThis.ColorLink = globalThis.ColorLink || {};
 
-  var SCREENS = ['menu', 'levels', 'game', 'settings', 'stats'];
+  var SCREENS = ['menu', 'levels', 'game', 'settings', 'stats', 'daily', 'achievements'];
   var refreshers = {};
 
   function show(name) {
@@ -15,6 +15,11 @@
     if (name === 'levels' && refreshers.levels) refreshers.levels.build();
     if (name === 'stats' && refreshers.stats) refreshers.stats.refresh();
     if (name === 'menu' && refreshers.menu) refreshers.menu.refresh();
+    if (name === 'daily' && refreshers.daily) {
+      refreshers.daily.refresh();
+      refreshers.daily.startTick();
+    }
+    if (name === 'achievements' && refreshers.achievements) refreshers.achievements.build();
   }
 
   function applyThemeToRenderer(theme) {
@@ -29,6 +34,8 @@
     if (refreshers.levels) refreshers.levels.build();
     if (refreshers.stats) refreshers.stats.refresh();
     if (refreshers.settings) refreshers.settings.refresh();
+    if (refreshers.daily) refreshers.daily.refresh();
+    if (refreshers.achievements) refreshers.achievements.build();
   }
 
   function boot() {
@@ -47,6 +54,13 @@
       refreshAll: refreshAll,
       openGame: function (levelId) {
         CL.app.gameplay.open(levelId);
+      },
+      openDailyLevel: function (level) {
+        CL.app.gameplay.open(level);
+      },
+      openLevels: function (chapterId) {
+        if (refreshers.levels && chapterId) refreshers.levels.openAt(chapterId);
+        show('levels');
       }
     };
 
@@ -73,6 +87,8 @@
     var gameplay = CL.GameplayScreen.init(ctx);
     refreshers.settings = CL.SettingsScreen.init(ctx);
     refreshers.stats = CL.StatsScreen.init(ctx);
+    refreshers.daily = CL.DailyScreen.init(ctx);
+    refreshers.achievements = CL.AchievementsScreen.init(ctx);
 
     CL.app = { ctx: ctx, gameplay: gameplay, game: gameplay.game };
 

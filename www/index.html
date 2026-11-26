@@ -45,9 +45,15 @@
         <span class="cloud cloud-2"></span>
       </div>
       <header class="menu-top">
-        <div class="coin-counter">
-          <svg viewBox="0 0 24 24" class="ic coin"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#B8860B">C</text></svg>
-          <b id="menu-coins">0</b>
+        <div class="menu-chips">
+          <div class="coin-counter">
+            <svg viewBox="0 0 24 24" class="ic coin"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#B8860B">C</text></svg>
+            <b id="menu-coins">0</b>
+          </div>
+          <div class="star-counter">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700" stroke="#F5A300" stroke-width="1"/></svg>
+            <b id="menu-stars">0/0</b>
+          </div>
         </div>
         <div class="menu-top-actions">
           <button id="menu-sound" class="icon-btn round" data-label="sound" aria-label="Sound"></button>
@@ -87,16 +93,25 @@
             <svg viewBox="0 0 24 24" class="ic"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg>
             <span data-i18n="menu.continue">متابعة</span>
           </button>
-          <button id="btn-levels" class="btn btn-blue">
+          <button id="btn-levels" class="btn btn-purple">
             <svg viewBox="0 0 24 24" class="ic"><path d="M4 5h16v3H4zm0 5.5h16v3H4zM4 16h16v3H4z" fill="currentColor"/></svg>
             <span data-i18n="menu.levels">اختيار المرحلة</span>
+          </button>
+          <button id="btn-daily" class="btn btn-blue">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm-1 8v10h12V10H6zm2 3h3v3H8v-3z" fill="currentColor"/></svg>
+            <span data-i18n="menu.daily">التحديات اليومية</span>
+            <span id="daily-done-badge" class="badge badge-done" hidden>✓</span>
+          </button>
+          <button id="btn-achievements" class="btn btn-orange">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M6 3h12v2h3v3a5 5 0 0 1-4.6 5A6 6 0 0 1 13 16v2h3v3H8v-3h3v-2a6 6 0 0 1-3.4-3A5 5 0 0 1 3 8V5h3V3zm-1 4v1a3 3 0 0 0 2 2.8V7H5zm14 0h-2v3.8A3 3 0 0 0 19 8V7z" fill="currentColor"/></svg>
+            <span data-i18n="menu.achievements">الإنجازات</span>
           </button>
           <div class="menu-row">
             <button id="btn-settings" class="btn btn-purple">
               <svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor" transform="translate(-0.9 0)"/></svg>
               <span data-i18n="menu.settings">الإعدادات</span>
             </button>
-            <button id="btn-stats" class="btn btn-orange">
+            <button id="btn-stats" class="btn btn-green">
               <svg viewBox="0 0 24 24" class="ic"><path d="M5 12h3v8H5zm5.5-6h3v14h-3zM16 9h3v11h-3z" fill="currentColor"/></svg>
               <span data-i18n="menu.stats">الإحصائيات</span>
             </button>
@@ -122,7 +137,88 @@
         </span>
       </header>
       <div class="screen-scroll">
+        <div class="chapter-nav">
+          <button id="chapter-prev" class="icon-btn round btn-purple-solid chapter-arrow" aria-label="Previous chapter">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+          </button>
+          <div class="chapter-info card">
+            <div class="chapter-title-row">
+              <h3 id="chapter-title">المرحلة 1</h3>
+              <span id="chapter-stars" class="chapter-stars">
+                <svg viewBox="0 0 24 24" class="ic small"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>
+                <b>0/78</b>
+              </span>
+            </div>
+            <p id="chapter-desc" class="chapter-desc"></p>
+            <div class="trophy-progress">
+              <svg viewBox="0 0 24 24" class="ic small"><path d="M6 3h12v2h3v3a5 5 0 0 1-4.6 5A6 6 0 0 1 13 16v2h3v3H8v-3h3v-2a6 6 0 0 1-3.4-3A5 5 0 0 1 3 8V5h3V3zm-1 4v1a3 3 0 0 0 2 2.8V7H5zm14 0h-2v3.8A3 3 0 0 0 19 8V7z" fill="#FFD700"/></svg>
+              <div class="progress-bar"><div id="chapter-progress-fill" class="progress-fill"></div></div>
+              <span id="chapter-progress-label" class="chapter-progress-label">0/26</span>
+            </div>
+          </div>
+          <button id="chapter-next" class="icon-btn round btn-purple-solid chapter-arrow" aria-label="Next chapter">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M8.6 4.6 16 12l-7.4 7.4-1.4-1.4 6-6-6-6z" fill="currentColor"/></svg>
+          </button>
+        </div>
         <div id="levels-grid" class="levels-grid"></div>
+      </div>
+    </section>
+
+    <!-- DAILY CHALLENGE -->
+    <section id="screen-daily" class="screen screen-sky">
+      <header class="topbar topbar-purple">
+        <button class="icon-btn back" data-nav="menu" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="topbar-title" data-i18n="daily.title">التحدي اليومي</h2>
+        <span class="topbar-chip-spacer"></span>
+      </header>
+      <div class="screen-scroll">
+        <div class="daily-card card">
+          <div class="daily-head">
+            <div class="daily-date">
+              <svg viewBox="0 0 24 24" class="ic"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm-1 8v10h12V10H6zm2 3h3v3H8v-3z" fill="#7b4fb6"/></svg>
+              <span id="daily-date-label">—</span>
+            </div>
+            <h3 data-i18n="daily.today">تحدي اليوم</h3>
+          </div>
+          <div class="daily-meta">
+            <span class="status-chip"><span data-i18n="daily.difficulty">الصعوبة</span>: <b id="daily-difficulty">—</b></span>
+            <span class="status-chip reward-chip">
+              <svg viewBox="0 0 24 24" class="ic small"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/></svg>
+              +<b id="daily-reward">100</b>
+            </span>
+          </div>
+          <div id="daily-preview" class="daily-preview">
+            <canvas id="daily-canvas"></canvas>
+          </div>
+          <div class="daily-countdown" id="daily-countdown-wrap">
+            <svg viewBox="0 0 24 24" class="ic small"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 10.6 4 2.3-1 1.7-5-2.9V6h2v6.6z" fill="#e53935"/></svg>
+            <b id="daily-countdown">23:45:12</b>
+          </div>
+          <button id="btn-start-daily" class="btn btn-green">
+            <svg viewBox="0 0 24 24" class="ic"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            <span data-i18n="daily.start">ابدأ التحدي</span>
+          </button>
+          <p id="daily-completed-label" class="daily-completed" hidden>
+            <svg viewBox="0 0 24 24" class="ic small"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" fill="#4caf50"/></svg>
+            <span data-i18n="daily.completed">تم إكمال تحدي اليوم!</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="screen-achievements" class="screen screen-sky">
+      <header class="topbar topbar-purple">
+        <button class="icon-btn back" data-nav="menu" aria-label="Back">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4-6-6 6-6z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="topbar-title" data-i18n="ach.title">الإنجازات</h2>
+        <span class="topbar-chip-spacer"></span>
+      </header>
+      <div class="screen-scroll">
+        <div id="achievements-list" class="achievements-list"></div>
       </div>
     </section>
 
@@ -150,8 +246,9 @@
       </header>
       <div class="game-status">
         <span class="status-chip"><span data-i18n="game.moves">الحركات</span>: <b id="game-moves">0</b></span>
-        <span class="status-chip"><span data-i18n="game.time">الوقت</span>: <b id="game-time">00:00</b></span>
+        <span class="status-chip" id="game-time-chip"><span data-i18n="game.time">الوقت</span>: <b id="game-time">00:00</b></span>
         <span class="status-chip"><span data-i18n="game.connected">متصلة</span>: <b id="game-connected">0/2</b></span>
+        <span class="status-chip remaining-chip" id="game-remaining-chip" hidden><span data-i18n="game.remaining">المتبقي</span>: <b id="game-remaining">0</b></span>
       </div>
       <div id="board-wrap" class="board-wrap">
         <canvas id="board-canvas"></canvas>
@@ -203,7 +300,7 @@
           <svg viewBox="0 0 24 24" class="ic"><path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2z" fill="currentColor"/></svg>
           <span data-i18n="settings.reset">إعادة تعيين التقدّم</span>
         </button>
-        <p class="version-note">Color Link — Phase 1 · v1.0.0</p>
+        <p class="version-note">Color Link — Phase 2 · v2.0.0</p>
       </div>
     </section>
 
@@ -225,6 +322,11 @@
           <div class="stat-card card"><span class="stat-value" id="stat-moves">0</span><span class="stat-label" data-i18n="stats.moves">إجمالي الحركات</span></div>
           <div class="stat-card card"><span class="stat-value" id="stat-hints">0</span><span class="stat-label" data-i18n="stats.hints">التلميحات المستخدمة</span></div>
           <div class="stat-card card"><span class="stat-value" id="stat-sessions">0</span><span class="stat-label" data-i18n="stats.sessions">الجلسات</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-stars">0</span><span class="stat-label" data-i18n="stats.stars">النجوم</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-attempts">0</span><span class="stat-label" data-i18n="stats.attempts">المحاولات</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-daily">0</span><span class="stat-label" data-i18n="stats.daily">التحديات اليومية</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-chapters">0/5</span><span class="stat-label" data-i18n="stats.chapters">فصول مكتملة</span></div>
+          <div class="stat-card card"><span class="stat-value" id="stat-coins-earned">0</span><span class="stat-label" data-i18n="stats.coinsEarned">العملات المكتسبة</span></div>
         </div>
       </div>
     </section>
@@ -235,10 +337,15 @@
   <script src="src/systems/storage.js"></script>
   <script src="src/systems/localization.js"></script>
   <script src="src/systems/audio.js"></script>
-  <script src="src/systems/progression.js"></script>
   <script src="src/data/levels.js"></script>
+  <script src="src/data/levels2.js"></script>
+  <script src="src/core/mechanics.js"></script>
   <script src="src/core/solver.js"></script>
   <script src="src/core/level-manager.js"></script>
+  <script src="src/systems/progression.js"></script>
+  <script src="src/systems/coins.js"></script>
+  <script src="src/systems/daily.js"></script>
+  <script src="src/systems/achievements.js"></script>
   <script src="src/core/board.js"></script>
   <script src="src/core/path-engine.js"></script>
   <script src="src/core/input-manager.js"></script>
@@ -251,6 +358,8 @@
   <script src="src/ui/gameplay-screen.js"></script>
   <script src="src/ui/settings-screen.js"></script>
   <script src="src/ui/stats-screen.js"></script>
+  <script src="src/ui/daily-screen.js"></script>
+  <script src="src/ui/achievements-screen.js"></script>
   <script src="src/main.js"></script>
 </body>
 </html>

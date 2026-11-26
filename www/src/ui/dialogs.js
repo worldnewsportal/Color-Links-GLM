@@ -58,20 +58,24 @@
     });
   }
 
+  function starSvg(dim) {
+    return '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"' +
+      (dim ? ' fill="#9e9e9e" opacity="0.45"' : ' fill="#FFD700" class="win-star-lit"') + '/></svg>';
+  }
+
   function levelComplete(result, actions) {
     var built = buildOverlay('win-overlay');
     var card = built.card;
     var T2 = CL.I18N.t;
 
+    var earned = result.stars || 1;
     var stars = document.createElement('div');
     stars.className = 'win-stars';
     stars.innerHTML =
-      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>' +
-      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>' +
-      '<svg viewBox="0 0 24 24" class="ic"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.3 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z" fill="#FFD700"/></svg>';
+      starSvg(earned < 1) + starSvg(earned < 2) + starSvg(earned < 3);
     var h = document.createElement('h3');
     h.className = 'win-title';
-    h.textContent = T2('win.title');
+    h.textContent = earned >= 3 ? T2('win.perfect') : T2('win.title');
     var sub = document.createElement('p');
     sub.className = 'win-sub';
     sub.textContent = T2('game.level') + ' ' + result.levelId;
@@ -86,6 +90,8 @@
     tm.innerHTML = '<b>' + formatTime(result.timeSec) + '</b><span>' + T2('win.time') + '</span>';
     row.appendChild(mv);
     row.appendChild(tm);
+
+    var summary = actions.summary || null;
 
     var actionsRow = document.createElement('div');
     actionsRow.className = 'dialog-actions';
@@ -105,8 +111,58 @@
     card.appendChild(stars);
     card.appendChild(h);
     card.appendChild(sub);
+    if (summary && summary.coinsEarned > 0) {
+      var coinsLine = document.createElement('div');
+      coinsLine.className = 'win-coins';
+      coinsLine.innerHTML =
+        '<svg viewBox="0 0 24 24" class="ic small"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/></svg>' +
+        '<b>+' + summary.coinsEarned + '</b><span>' + T2('win.coins') + '</span>';
+      card.appendChild(coinsLine);
+    }
     card.appendChild(row);
     card.appendChild(actionsRow);
+  }
+
+  function timeout(actions) {
+    var built = buildOverlay();
+    var card = built.card;
+    var h = document.createElement('h3');
+    h.textContent = T('game.timeoutTitle');
+    var p = document.createElement('p');
+    p.className = 'dialog-msg';
+    p.textContent = T('game.timeoutMessage');
+    var row = document.createElement('div');
+    row.className = 'dialog-actions';
+    var menu = document.createElement('button');
+    menu.className = 'btn btn-ghost';
+    menu.textContent = T('win.menu');
+    var retry = document.createElement('button');
+    retry.className = 'btn btn-primary';
+    retry.textContent = T('game.retry');
+    row.appendChild(menu);
+    row.appendChild(retry);
+    card.appendChild(h);
+    card.appendChild(p);
+    card.appendChild(row);
+    function close() { closeOverlay(built.overlay); }
+    menu.addEventListener('click', function () { CL.Audio.play('tap'); close(); actions.onMenu(); });
+    retry.addEventListener('click', function () { CL.Audio.play('tap'); close(); actions.onRetry(); });
+  }
+
+  function rewardToast(message, coins) {
+    var root = document.getElementById('dialog-root');
+    var el = document.createElement('div');
+    el.className = 'toast toast-reward';
+    el.innerHTML =
+      '<svg viewBox="0 0 24 24" class="ic small"><circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#F5A300" stroke-width="2"/></svg>' +
+      '<span>' + message + '</span>' +
+      (coins ? '<b>+' + coins + '</b>' : '');
+    root.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('show'); });
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 2600);
   }
 
   function toast(message) {
@@ -132,7 +188,9 @@
   CL.Dialogs = {
     confirm: confirm,
     levelComplete: levelComplete,
+    timeout: timeout,
     toast: toast,
+    rewardToast: rewardToast,
     formatTime: formatTime
   };
 })();

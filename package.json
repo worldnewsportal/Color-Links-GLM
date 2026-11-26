@@ -1,7 +1,7 @@
 {
   "name": "color-link",
-  "version": "1.0.0",
-  "description": "Color Link - mobile color-connecting puzzle game (Phase 1)",
+  "version": "2.0.0",
+  "description": "Color Link - mobile color-connecting puzzle game (Phase 2)",
   "main": "www/index.html",
   "scripts": {
     "start": "npx --yes http-server www -p 8080 -c-1",

@@ -10,6 +10,7 @@
     function refresh() {
       var prog = CL.Progression;
       document.getElementById('menu-coins').textContent = prog.getStats().coins;
+      document.getElementById('menu-stars').textContent = prog.totalStars() + '/' + prog.maxStars();
       document.getElementById('menu-current-level').textContent = prog.currentLevel();
       document.getElementById('menu-completed').textContent = prog.completedCount();
       document.getElementById('menu-total').textContent = prog.totalLevels();
@@ -21,6 +22,8 @@
       updateThemeIcon(s.theme);
       var btnContinue = document.getElementById('btn-continue');
       btnContinue.style.display = prog.completedCount() > 0 ? '' : 'none';
+      var dailyDone = prog.dailyDone(CL.Daily.dateKey());
+      document.getElementById('daily-done-badge').hidden = !dailyDone;
     }
 
     function updateSoundIcon(on) {
@@ -48,7 +51,15 @@
     });
     document.getElementById('btn-levels').addEventListener('click', function () {
       CL.Audio.play('tap');
-      ctx.show('levels');
+      ctx.openLevels();
+    });
+    document.getElementById('btn-daily').addEventListener('click', function () {
+      CL.Audio.play('tap');
+      ctx.show('daily');
+    });
+    document.getElementById('btn-achievements').addEventListener('click', function () {
+      CL.Audio.play('tap');
+      ctx.show('achievements');
     });
     document.getElementById('btn-stats').addEventListener('click', function () {
       CL.Audio.play('tap');

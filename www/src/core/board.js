@@ -1,4 +1,4 @@
-/* Color Link - Core board state. */
+/* Color Link - Core board state (Phase 2: special tiles, full board). */
 (function () {
   'use strict';
 
@@ -21,6 +21,9 @@
       var pair = level.pairs[p];
       this.endpoints.push([pair[1] * this.w + pair[0], pair[3] * this.w + pair[2]]);
     }
+    this.mech = new CL.Mechanics(level);
+    this.freeCells = this.mech.freeCells;
+    this.fullBoard = !!level.fullBoard;
   }
 
   Board.prototype.idx = function (x, y) { return y * this.w + x; };
@@ -32,6 +35,13 @@
     return Math.abs(ax - bx) + Math.abs(ay - by) === 1;
   };
 
+  /* Adjacent OR connected through a teleport twin pair. */
+  Board.prototype.linked = function (a, b) {
+    if (this.adjacent(a, b)) return true;
+    var t = this.mech.twin[a];
+    return t !== -1 && t === b && this.mech.twin[b] === a;
+  };
+
   Board.prototype.isBlocked = function (i) { return this.blocked[i] === 1; };
 
   Board.prototype.endpointColor = function (i) {
@@ -41,12 +51,31 @@
     return -1;
   };
 
-  Board.prototype.cellColor = function (i) {
+  /* Colors occupying a cell (0..2 entries; 2 only on bridges). */
+  Board.prototype.occupancy = function (i) {
+    var out = [];
     for (var c = 0; c < this.pairCount; c++) {
       var path = this.paths[c];
-      if (path && path.indexOf(i) !== -1) return c;
+      if (path && path.indexOf(i) !== -1) out.push(c);
     }
-    return -1;
+    return out;
+  };
+
+  Board.prototype.occupancyCount = function (i) { return this.occupancy(i).length; };
+
+  Board.prototype.cellColor = function (i) {
+    var occ = this.occupancy(i);
+    return occ.length ? occ[0] : -1;
+  };
+
+  /* True when the cell can be entered by `color` right now. */
+  Board.prototype.canEnter = function (i, color) {
+    if (this.isBlocked(i)) return false;
+    var ep = this.endpointColor(i);
+    if (ep !== -1 && ep !== color) return false;
+    var lock = this.mech.lockKey[i];
+    if (lock !== -1 && !this.isConnected(lock)) return false;
+    return true;
   };
 
   Board.prototype.isConnected = function (c) {
@@ -57,7 +86,7 @@
     var okEnds = (first === ends[0] && last === ends[1]) || (first === ends[1] && last === ends[0]);
     if (!okEnds) return false;
     for (var k = 1; k < path.length; k++) {
-      if (!this.adjacent(path[k - 1], path[k])) return false;
+      if (!this.linked(path[k - 1], path[k])) return false;
     }
     return true;
   };
@@ -74,6 +103,7 @@
     for (var c = 0; c < this.pairCount; c++) {
       if (!this.isConnected(c)) return false;
     }
+    if (this.fullBoard && this.coveredCount() !== this.freeCells) return false;
     return true;
   };
 

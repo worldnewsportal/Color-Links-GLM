@@ -15,7 +15,10 @@ const FILES = [
   'www/src/systems/localization.js',
   'www/src/systems/audio.js',
   'www/src/systems/progression.js',
+  'www/src/systems/coins.js',
   'www/src/data/levels.js',
+  'www/src/data/levels2.js',
+  'www/src/core/mechanics.js',
   'www/src/core/solver.js',
   'www/src/core/level-manager.js',
   'www/src/core/board.js',
@@ -57,7 +60,26 @@ for (const level of CL.LevelManager.all()) {
   const solution = CL.LevelManager.solution(level.id);
   check(`L${level.id} has cached solution`, !!solution);
   const board = new CL.Board(level);
-  for (let c = 0; c < board.pairCount; c++) {
+  /* Lock-aware order: a color whose witness path enters a locked cell can
+     only be drawn after the key color's pair is connected. */
+  const order = [];
+  const placed = new Set();
+  let guard = 0;
+  while (order.length < board.pairCount && guard++ < 50) {
+    for (let c = 0; c < board.pairCount; c++) {
+      if (placed.has(c)) continue;
+      const solPath = solution[c];
+      let ready = true;
+      for (const lock of (level.locks || [])) {
+        const lockCell = lock.cell[1] * level.w + lock.cell[0];
+        if (solPath.indexOf(lockCell) !== -1 && lock.color !== c && !placed.has(lock.color)) {
+          ready = false; break;
+        }
+      }
+      if (ready) { order.push(c); placed.add(c); }
+    }
+  }
+  for (const c of order) {
     const solPath = solution[c];
     let r = CL.PathEngine.startDraw(board, c, solPath[0]);
     check(`L${level.id} c${c} startDraw`, !!r);
@@ -158,10 +180,14 @@ const cutLevel = { w: 5, h: 5, pairs: [[0, 1, 4, 1], [0, 3, 4, 3]] };
 }
 
 // --- level manager integrity
-check('30 levels', CL.LevelManager.count() === 30);
+check('130 levels', CL.LevelManager.count() === 130);
 check('ids sequential', CL.LevelManager.all().every((l, i) => l.id === i + 1));
 check('next(1) = 2', CL.LevelManager.next(1) === 2);
-check('next(30) = null', CL.LevelManager.next(30) === null);
+check('next(130) = null', CL.LevelManager.next(130) === null);
+check('chapters = 5', CL.LevelManager.chapters().length === 5);
+check('chapterOf(1) = 1', CL.LevelManager.chapterOf(1).id === 1);
+check('chapterOf(30) = 2', CL.LevelManager.chapterOf(30).id === 2);
+check('chapterOf(130) = 5', CL.LevelManager.chapterOf(130).id === 5);
 
 console.log(`\nSmoke tests: ${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

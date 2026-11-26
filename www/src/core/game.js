@@ -1,4 +1,5 @@
-/* Color Link - Game controller: ties board, engine, input, renderer, hints. */
+/* Color Link - Game controller (Phase 2): board, engine, input, renderer,
+   countdown timers, stars, attempts. */
 (function () {
   'use strict';
 
@@ -16,10 +17,12 @@
     this.undoStack = [];
     this.activeColor = -1;
     this.won = false;
+    this.timedOut = false;
     this.raf = null;
     this.handlers = {
       onStateChange: function () {},
-      onWin: function () {}
+      onWin: function () {},
+      onTimeout: function () {}
     };
     var self = this;
     this.input = CL.InputManager.attach(canvas, {
@@ -32,8 +35,9 @@
     this.loop = this.loop.bind(this);
   }
 
-  Game.prototype.load = function (levelId) {
-    var level = CL.LevelManager.get(levelId);
+  /* Accepts a numeric level id (LevelManager) or a level object (daily). */
+  Game.prototype.load = function (idOrLevel) {
+    var level = typeof idOrLevel === 'object' ? idOrLevel : CL.LevelManager.get(idOrLevel);
     if (!level) return false;
     this.level = level;
     this.board = new CL.Board(level);
@@ -41,12 +45,15 @@
     this.undoStack = [];
     this.activeColor = -1;
     this.won = false;
+    this.timedOut = false;
     this.elapsed = 0;
     this.renderer.setGhost(null);
     this.renderer.particles.length = 0;
     this.renderer.layout(this.board);
+    if (typeof idOrLevel === 'number') {
+      CL.Progression.addStats('attempts', 1);
+    }
     this.startTimer();
-    this.renderer.ghost = null;
     this.startLoop();
     this.handlers.onStateChange(this.state());
     return true;
@@ -59,15 +66,29 @@
     this.startedAt = Date.now();
     if (this.timerId) clearInterval(this.timerId);
     this.timerId = setInterval(function () {
-      if (!self.won) {
-        self.elapsed = Math.floor((Date.now() - self.startedAt) / 1000);
-        self.handlers.onStateChange(self.state());
+      if (self.won || self.timedOut) return;
+      self.elapsed = Math.floor((Date.now() - self.startedAt) / 1000);
+      if (self.level && self.level.timeLimit && self.elapsed >= self.level.timeLimit) {
+        self.timeout();
+        return;
       }
+      self.handlers.onStateChange(self.state());
     }, 1000);
   };
 
+  Game.prototype.timeout = function () {
+    this.timedOut = true;
+    this.elapsed = this.level.timeLimit;
+    if (this.timerId) { clearInterval(this.timerId); this.timerId = null; }
+    CL.Audio.play('error');
+    this.vibrate([80, 60, 80]);
+    this.handlers.onStateChange(this.state());
+    var self = this;
+    setTimeout(function () { self.handlers.onTimeout(self.state()); }, 350);
+  };
+
   Game.prototype.pointerDown = function (cell) {
-    if (this.won || cell < 0) return;
+    if (this.won || this.timedOut || cell < 0) return;
     var board = this.board;
     var epColor = board.endpointColor(cell);
     var occ = board.cellColor(cell);
@@ -88,7 +109,7 @@
   };
 
   Game.prototype.pointerMove = function (cell) {
-    if (this.won || this.activeColor < 0 || cell < 0) return;
+    if (this.won || this.timedOut || this.activeColor < 0 || cell < 0) return;
     var res = CL.PathEngine.extendDraw(this.board, this.activeColor, cell);
     if (res && res.changed) {
       if (res.pushed) {
@@ -117,7 +138,7 @@
   };
 
   Game.prototype.undo = function () {
-    if (this.won || !this.undoStack.length) return false;
+    if (this.won || this.timedOut || !this.undoStack.length) return false;
     var entry = this.undoStack.pop();
     this.board.restore(entry.snap);
     this.renderer.setGhost(null);
@@ -128,21 +149,13 @@
   };
 
   Game.prototype.restart = function () {
-    if (this.level) this.load(this.level.id);
+    if (this.level) this.load(this.level);
   };
 
+  /* Returns {hint, free} | {error:'no-coins'} | null (nothing consumed). */
   Game.prototype.hint = function () {
-    if (this.won) return null;
-    var left = CL.Hints.remaining(this.level.id);
-    if (left <= 0) return { error: 'no-hints' };
-    var hint = CL.Hints.getHint(this.board, this.level.id);
-    if (!hint) return null;
-    CL.Hints.useOne(this.level.id);
-    this.renderer.setGhost(hint);
-    CL.Audio.play('hint');
-    this.vibrate(15);
-    this.renderer.draw(this.board);
-    return hint;
+    if (this.won || this.timedOut) return null;
+    return CL.Hints.requestHint(this.board, this.level.id);
   };
 
   Game.prototype.win = function () {
@@ -163,21 +176,43 @@
   };
 
   Game.prototype.result = function () {
+    var id = this.level.id;
+    var stars;
+    if (this.level.stars) {
+      var crit = this.level.stars;
+      stars = this.moves <= crit.three ? 3 : (this.moves <= crit.two ? 2 : 1);
+    } else {
+      stars = CL.LevelManager.starsFor(id, this.moves);
+    }
     return {
-      levelId: this.level.id,
+      levelId: id,
+      level: this.level,
       moves: this.moves,
       timeSec: this.elapsed,
-      hintUsed: CL.Hints.remaining(this.level.id) < CL.Hints.maxHints()
+      stars: stars || 1,
+      hintUsed: CL.Hints.remaining(id) < CL.Hints.maxHints()
     };
   };
 
   Game.prototype.state = function () {
+    var remaining = null;
+    if (this.board && this.board.fullBoard) {
+      remaining = this.board.freeCells - this.board.coveredCount();
+    }
+    var timeLeft = null;
+    if (this.level && this.level.timeLimit) {
+      timeLeft = Math.max(0, this.level.timeLimit - this.elapsed);
+    }
     return {
       moves: this.moves,
       timeSec: this.elapsed,
+      timeLeft: timeLeft,
+      timeLimit: this.level && this.level.timeLimit ? this.level.timeLimit : null,
+      remaining: remaining,
       connected: this.board ? this.board.connectedCount() : 0,
       pairCount: this.board ? this.board.pairCount : 0,
       won: this.won,
+      timedOut: this.timedOut,
       canUndo: this.undoStack.length > 0
     };
   };

@@ -265,3 +265,187 @@
   50% { transform: translateX(6px); }
   75% { transform: translateX(-4px); }
 }
+
+/* ===== Phase 2: menu chips ===== */
+.menu-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.star-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 6px 14px 6px 8px;
+  font-size: 1.05rem;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-soft);
+}
+
+.star-counter .ic { width: 22px; height: 22px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25)); }
+
+.badge-done { background: var(--green); font-size: 0.75rem; }
+
+.ic.xsmall { width: 16px; height: 16px; }
+
+/* ===== Phase 2: win dialog extras ===== */
+.win-coins {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: rgba(255, 193, 7, 0.18);
+  border: 1px solid rgba(245, 163, 0, 0.4);
+  border-radius: 999px;
+  padding: 7px 14px;
+  margin-bottom: 16px;
+  color: var(--panel-text);
+  font-weight: 800;
+}
+
+.win-coins span { font-size: 0.8rem; color: var(--panel-dim); }
+
+.win-star-lit { animation: star-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4) backwards; }
+
+.toast-reward b { color: var(--gold); margin-inline-start: 8px; }
+
+/* ===== Phase 2: daily challenge screen ===== */
+.daily-card {
+  width: min(100%, 420px);
+  margin: 0 auto;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--panel-text);
+  text-align: center;
+}
+
+.daily-head { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.daily-head h3 { font-size: 1.3rem; font-weight: 800; }
+
+.daily-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(123, 79, 182, 0.12);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #7b4fb6;
+}
+
+.daily-date .ic { width: 20px; height: 20px; }
+
+.daily-meta { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+
+.daily-meta .status-chip {
+  background: rgba(123, 79, 182, 0.1);
+  border-color: rgba(123, 79, 182, 0.25);
+  color: var(--panel-text);
+  text-shadow: none;
+}
+
+.daily-meta .reward-chip b { color: #c8a600; }
+
+.daily-preview {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+}
+
+.daily-preview canvas { width: 100%; height: auto; display: block; }
+
+.daily-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  background: var(--red);
+  color: #fff;
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 0 var(--red-dark), var(--shadow-soft);
+}
+
+.daily-countdown .ic { width: 18px; height: 18px; }
+
+.daily-completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--green-dark);
+  font-weight: 800;
+}
+
+/* ===== Phase 2: achievements screen ===== */
+.achievements-list {
+  width: min(100%, 460px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.ach-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  color: var(--panel-text);
+}
+
+.ach-card:not(.unlocked) { opacity: 0.72; }
+
+.ach-icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(123, 79, 182, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7b4fb6;
+}
+
+.ach-card.unlocked .ach-icon { background: rgba(255, 215, 0, 0.25); color: #c8a600; }
+.ach-icon .ic { width: 26px; height: 26px; }
+
+.ach-body { flex: 1; min-width: 0; }
+
+.ach-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.ach-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #c8a600;
+  white-space: nowrap;
+}
+
+.ach-desc { font-size: 0.76rem; color: var(--panel-dim); font-weight: 700; margin: 2px 0 8px; }
+
+.ach-progress { display: flex; align-items: center; gap: 10px; }
+.ach-progress .progress-bar { flex: 1; height: 10px; }
+.ach-progress .progress-fill { background: linear-gradient(90deg, #66bb6a, #43a047); }
+
+.ach-count { font-size: 0.74rem; font-weight: 800; color: var(--panel-dim); }
+
+.ach-state { flex: none; color: var(--panel-dim); }
+.ach-state .ic { width: 22px; height: 22px; }

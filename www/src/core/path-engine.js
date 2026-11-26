@@ -1,4 +1,6 @@
-/* Color Link - Path drawing rules (Flow-style): extend, backtrack, cut, snap. */
+/* Color Link - Path drawing rules (Phase 2): extend, backtrack, cut,
+   snap, bridge coexist, teleport jumps, directional/restricted tiles,
+   locked cells. */
 (function () {
   'use strict';
 
@@ -31,9 +33,31 @@
     var path = board.paths[color];
     if (!path || path.length === 0) return null;
     var last = path[path.length - 1];
+    var prev = path.length > 1 ? path[path.length - 2] : -1;
+    var mech = board.mech;
     if (cell === last) return null;
-    if (!board.adjacent(last, cell)) return null;
+
+    var isJump = false;
+    var twin = mech.twin[last];
+    if (twin !== -1 && prev !== twin) {
+      /* Standing on a portal entered by adjacency: must jump to twin. */
+      if (cell !== twin) return null;
+      isJump = true;
+    } else {
+      if (!board.adjacent(last, cell)) return null;
+      /* Directional tile: exit direction is forced. */
+      var forced = mech.dirOf[last];
+      if (forced !== -1 && mech.stepByIndex(last, forced) !== cell) return null;
+      /* Restricted tile: exit direction forbidden. */
+      var banned = mech.restrictedMask[last];
+      if (banned) {
+        var dirName = mech.dirBetween(last, cell);
+        if (dirName && (banned & CL.Mechanics.DIR_BIT[dirName])) return null;
+      }
+    }
+
     if (board.isBlocked(cell)) return null;
+    if (!board.canEnter(cell, color)) return null;
 
     var ends = board.endpoints[color];
     var isOtherEnd = (cell === ends[0] || cell === ends[1]);
@@ -45,7 +69,7 @@
 
     var pos = path.indexOf(cell);
     if (pos !== -1) {
-      if (pos === path.length - 2) {
+      if (pos === path.length - 2 && !isJump) {
         path.pop();
         return { changed: true, popped: true };
       }
@@ -53,22 +77,28 @@
     }
 
     if (!isOtherEnd) {
-      var occ = board.cellColor(cell);
-      if (occ !== -1 && occ !== color) {
-        var otherPath = board.paths[occ];
+      var occ = board.occupancy(cell);
+      var others = occ.filter(function (c) { return c !== color; });
+      if (others.length > 0) {
+        if (mech.bridge[cell] && occ.length < 2) {
+          /* Bridge: coexist with the other color. */
+          path.push(cell);
+          return { changed: true, pushed: true, bridge: true, jumped: isJump };
+        }
+        var occColor = others[0];
+        var otherPath = board.paths[occColor];
         var cutIdx = otherPath.indexOf(cell);
-        board.paths[occ] = cutIdx > 0 ? otherPath.slice(0, cutIdx) : null;
+        board.paths[occColor] = cutIdx > 0 ? otherPath.slice(0, cutIdx) : null;
         path.push(cell);
-        return { changed: true, cut: occ, pushed: true };
+        return { changed: true, cut: occColor, pushed: true, jumped: isJump };
       }
-      if (occ === color) return null;
       path.push(cell);
-      return { changed: true, pushed: true };
+      return { changed: true, pushed: true, jumped: isJump };
     }
 
     path.push(cell);
     var done = board.isConnected(color);
-    return { changed: true, pushed: true, completedPath: done };
+    return { changed: true, pushed: true, completedPath: done, jumped: isJump };
   }
 
   CL.PathEngine = {
